@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>runnable.java</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<style type="text/css">
+<!--
+body {color: #000000; background-color: #ffffff; font-family: Monospaced}
+pre {color: #000000; background-color: #ffffff; font-family: Monospaced}
+table {color: #000000; background-color: #e9e8e2; font-family: Monospaced}
+.ST1 {font-family: Monospaced; font-weight: bold}
+.ST3 {font-family: Monospaced; font-weight: bold; font-style: italic}
+.ST0 {color: #969696; font-family: Monospaced; font-weight: bold}
+.comment {color: #969696}
+.ST2 {color: #009900; font-family: Monospaced; font-style: italic}
+.keyword-directive {color: #0000e6}
+.ST4 {color: #ce7b00; font-family: Monospaced; font-weight: bold}
+.character {color: #ce7b00}
+-->
+</style>
+</head>
+<body>
+<table width="100%"><tr><td align="center">/home/craig/Desktop/Checkpoint_Manager_crh13/src/runnable.java</td></tr></table>
+<pre>
+ 1 
+ 2 <span class="keyword-directive">import</span> java.io.IOException;
+ 3 <span class="keyword-directive">import</span> uk.ac.aber.dcs.crh13.fileio.FileIO;
+ 4 <span class="keyword-directive">import</span> uk.ac.aber.dcs.crh13.frame.Gui;
+ 5 
+ 6 <span class="comment">/**</span>
+ 7 <span class="comment"> * </span><span class="ST0">Runnable</span> <span class="ST0">class</span> <span class="ST0">used</span> <span class="ST0">to</span> <span class="ST0">launch</span> <span class="ST0">checkpoint</span> <span class="ST0">manager</span> <span class="ST0">program</span><span class="ST0">.</span> <span class="comment">Contains</span> <span class="comment">name</span>
+ 8 <span class="comment"> * </span><span class="comment">output</span> <span class="comment">of</span> <span class="comment">program</span> <span class="comment">and</span> <span class="comment">calls</span> <span class="comment">methods</span> <span class="comment">for</span> <span class="comment">getting</span> <span class="comment">files</span> <span class="comment">containing</span> <span class="comment">required</span>
+ 9 <span class="comment"> * </span><span class="comment">information</span><span class="comment">, </span><span class="comment">and</span> <span class="comment">calls</span> <span class="comment">graphical</span> <span class="comment">side</span> <span class="comment">of</span> <span class="comment">system</span> <span class="comment">to</span> <span class="comment">open</span><span class="comment">.</span>
+10 <span class="comment"> *</span>
+11 <span class="comment"> * </span><span class="ST0">@author</span> <span class="comment">craig</span>
+12  <span class="comment">*/</span>
+13 <span class="keyword-directive">public</span> <span class="keyword-directive">class</span> <span class="ST1">runnable</span> {
+14 
+15     <span class="keyword-directive">private</span> <span class="keyword-directive">static</span> String[] <span class="ST2">entrants</span>;
+16     <span class="keyword-directive">private</span> <span class="keyword-directive">static</span> <span class="keyword-directive">int</span>[] <span class="ST2">checkPoints</span>;
+17     <span class="keyword-directive">private</span> <span class="keyword-directive">static</span> String[] <span class="ST2">courses</span>;
+18     <span class="keyword-directive">private</span> <span class="keyword-directive">static</span> String <span class="ST2">fileName</span>;
+19 
+20     <span class="keyword-directive">public</span> <span class="keyword-directive">static</span> <span class="keyword-directive">void</span> <span class="ST3">main</span>(String[] args) <span class="keyword-directive">throws</span> IOException {
+21         System.<span class="ST2">out</span>.println(<span class="character">&quot;</span><span class="character">   ___ _               _                _       _</span><span class="character">&quot;</span>);
+22         System.<span class="ST2">out</span>.println(<span class="character">&quot;</span><span class="character">  / __</span><span class="ST4">\\</span><span class="character"> |__   ___  ___| | ___ __   ___ (_)_ __ | |_</span><span class="character">&quot;</span>);
+23         System.<span class="ST2">out</span>.println(<span class="character">&quot;</span><span class="character"> / /  | &#39;_ </span><span class="ST4">\\</span><span class="character"> / _ </span><span class="ST4">\\</span><span class="character">/ __| |/ / &#39;_ </span><span class="ST4">\\</span><span class="character"> / _ </span><span class="ST4">\\</span><span class="character">| | &#39;_ </span><span class="ST4">\\</span><span class="character">| __|</span><span class="character">&quot;</span>);
+24         System.<span class="ST2">out</span>.println(<span class="character">&quot;</span><span class="character">/ /___| | | |  __/ (__|   &lt;| |_) | (_) | | | | | |_ </span><span class="character">&quot;</span>);
+25         System.<span class="ST2">out</span>.println(<span class="character">&quot;</span><span class="ST4">\\</span><span class="character">____/|_| |_|</span><span class="ST4">\\</span><span class="character">___|</span><span class="ST4">\\</span><span class="character">___|_|</span><span class="ST4">\\</span><span class="character">_</span><span class="ST4">\\</span><span class="character"> .__/ </span><span class="ST4">\\</span><span class="character">___/|_|_| |_|</span><span class="ST4">\\</span><span class="character">__|</span><span class="character">&quot;</span>);
+26         System.<span class="ST2">out</span>.println(<span class="character">&quot;</span><span class="character">                           |_|                      </span><span class="character">&quot;</span>);
+27 
+28         System.<span class="ST2">out</span>.println(<span class="character">&quot;</span><span class="character">  /</span><span class="ST4">\\</span><span class="character">/</span><span class="ST4">\\</span><span class="character">   __ _ _ __   __ _  __ _  ___ _ __ </span><span class="character">&quot;</span>);
+29         System.<span class="ST2">out</span>.println(<span class="character">&quot;</span><span class="character"> /    </span><span class="ST4">\\</span><span class="character"> / _` | &#39;_ </span><span class="ST4">\\</span><span class="character"> / _` |/ _` |/ _ </span><span class="ST4">\\</span><span class="character"> &#39;__|</span><span class="character">&quot;</span>);
+30         System.<span class="ST2">out</span>.println(<span class="character">&quot;</span><span class="character">/ /</span><span class="ST4">\\</span><span class="character">/</span><span class="ST4">\\</span> <span class="ST4">\\</span><span class="character"> (_| | | | | (_| | (_| |  __/ | </span><span class="character">&quot;</span>);
+31         System.<span class="ST2">out</span>.println(<span class="character">&quot;</span><span class="ST4">\\</span><span class="character">/    </span><span class="ST4">\\</span><span class="character">/</span><span class="ST4">\\</span><span class="character">__,_|_| |_|</span><span class="ST4">\\</span><span class="character">__,_|</span><span class="ST4">\\</span><span class="character">__, |</span><span class="ST4">\\</span><span class="character">___|_| </span><span class="character">&quot;</span>);
+32         System.<span class="ST2">out</span>.println(<span class="character">&quot;</span><span class="character">                          |___/  </span><span class="character">&quot;</span>);
+33         System.<span class="ST2">out</span>.println(<span class="character">&quot;</span><span class="character">(crh13)</span><span class="ST4">\n</span><span class="character">&quot;</span>);
+34 
+35 
+36         FileIO fio = <span class="keyword-directive">new</span> FileIO();
+37         <span class="ST2">entrants</span> = fio.get_entrants();
+38         <span class="ST2">checkPoints</span> = fio.get_checkpoints();
+39         <span class="ST2">courses</span> = fio.get_courses();
+40         <span class="ST2">fileName</span> = fio.get_current_checktimes();
+41 
+42         Gui gui = <span class="keyword-directive">new</span> Gui();
+43         gui.createAndShowGUI(<span class="ST2">entrants</span>, <span class="ST2">checkPoints</span>, <span class="ST2">courses</span>, <span class="ST2">fileName</span>);
+44 
+45 
+46     }
+47 }
+48 
+</pre></body>
+</html>

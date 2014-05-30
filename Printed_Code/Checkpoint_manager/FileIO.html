@@ -1,0 +1,208 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>FileIO.java</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<style type="text/css">
+<!--
+body {color: #000000; background-color: #ffffff; font-family: Monospaced}
+pre {color: #000000; background-color: #ffffff; font-family: Monospaced}
+table {color: #000000; background-color: #e9e8e2; font-family: Monospaced}
+.ST1 {font-family: Monospaced; font-weight: bold}
+.ST5 {font-family: Monospaced; font-style: italic}
+.ST0 {color: #969696; font-family: Monospaced; font-weight: bold}
+.comment {color: #969696}
+.ST3 {color: #009900; font-family: Monospaced; font-style: italic}
+.keyword-directive {color: #0000e6}
+.ST4 {color: #ce7b00; font-family: Monospaced; font-weight: bold}
+.ST2 {color: #009900}
+.character {color: #ce7b00}
+-->
+</style>
+</head>
+<body>
+<table width="100%"><tr><td align="center">/home/craig/Desktop/Checkpoint_Manager_crh13/src/uk/ac/aber/dcs/crh13/fileio/FileIO.java</td></tr></table>
+<pre>
+  1 <span class="keyword-directive">package</span> uk.ac.aber.dcs.crh13.fileio;
+  2 
+  3 <span class="keyword-directive">import</span> java.io.BufferedReader;
+  4 <span class="keyword-directive">import</span> java.io.File;
+  5 <span class="keyword-directive">import</span> java.io.FileNotFoundException;
+  6 <span class="keyword-directive">import</span> java.io.FileReader;
+  7 <span class="keyword-directive">import</span> java.io.IOException;
+  8 <span class="keyword-directive">import</span> java.io.InputStreamReader;
+  9 <span class="keyword-directive">import</span> java.io.RandomAccessFile;
+ 10 <span class="keyword-directive">import</span> java.nio.channels.FileChannel;
+ 11 <span class="keyword-directive">import</span> java.nio.channels.FileLock;
+ 12 <span class="keyword-directive">import</span> java.nio.channels.OverlappingFileLockException;
+ 13 
+ 14 <span class="comment">/**</span>
+ 15 <span class="comment"> * </span><span class="ST0">Class</span> <span class="ST0">responsible</span> <span class="ST0">for</span> <span class="ST0">reading</span> <span class="ST0">in</span> <span class="ST0">current</span> <span class="ST0">text</span> <span class="ST0">files</span><span class="ST0"> (</span><span class="ST0">nodes</span><span class="ST0">, </span><span class="ST0">entrants</span><span class="ST0">, </span><span class="ST0">check</span><span class="ST0">-</span>
+ 16 <span class="comment"> * </span><span class="ST0">point</span> <span class="ST0">files</span> <span class="ST0">to</span> <span class="ST0">be</span> <span class="ST0">updated</span><span class="ST0">)</span><span class="ST0">.</span> <span class="comment">Called</span> <span class="comment">at</span> <span class="comment">start</span> <span class="comment">of</span> <span class="comment">program</span> <span class="comment">to</span> <span class="comment">be</span> <span class="comment">ready</span> <span class="comment">loaded</span> <span class="comment">for</span>
+ 17 <span class="comment"> * </span><span class="comment">gui</span> <span class="comment">implementation</span><span class="comment">.</span>
+ 18 <span class="comment"> *</span>
+ 19 <span class="comment"> * </span><span class="ST0">@author</span> <span class="comment">Craig</span> <span class="comment">Heptinstall</span>
+ 20  <span class="comment">*/</span>
+ 21 <span class="keyword-directive">public</span> <span class="keyword-directive">class</span> <span class="ST1">FileIO</span> {
+ 22 
+ 23     <span class="keyword-directive">private</span> String[] <span class="ST2">entrants</span> = <span class="keyword-directive">new</span> String[30];
+ 24     <span class="keyword-directive">private</span> <span class="keyword-directive">int</span>[] <span class="ST2">checkPoints</span> = <span class="keyword-directive">new</span> <span class="keyword-directive">int</span>[30];
+ 25     <span class="keyword-directive">private</span> <span class="keyword-directive">static</span> String[] <span class="ST3">course</span> = <span class="keyword-directive">new</span> String[30];
+ 26 
+ 27     <span class="comment">/**</span>
+ 28 <span class="comment">     * </span><span class="ST0">Method</span> <span class="ST0">for</span> <span class="ST0">reading</span> <span class="ST0">and</span> <span class="ST0">getting</span> <span class="ST0">current</span> <span class="ST0">entrants</span> <span class="ST0">within</span> <span class="ST0">created</span> <span class="ST0">event</span><span class="ST0">.</span>
+ 29 <span class="comment">     *</span>
+ 30 <span class="comment">     * </span><span class="ST0">@param</span> void
+ 31      <span class="comment">*/</span>
+ 32     <span class="keyword-directive">public</span> String[] <span class="ST1">get_entrants</span>() {
+ 33         <span class="keyword-directive">boolean</span> check = <span class="keyword-directive">false</span>;
+ 34 
+ 35         <span class="keyword-directive">while</span> (check == <span class="keyword-directive">false</span>) {
+ 36             System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">Please Input Entrants File Name:</span><span class="character">&quot;</span>);
+ 37             InputStreamReader converter = <span class="keyword-directive">new</span> InputStreamReader(System.<span class="ST3">in</span>);
+ 38             BufferedReader in = <span class="keyword-directive">new</span> BufferedReader(converter);
+ 39             <span class="keyword-directive">try</span> {
+ 40                 <span class="comment">// make a &#39;file&#39; object   </span>
+ 41                 File file = <span class="keyword-directive">new</span> File(in.readLine());
+ 42                 <span class="comment">//  Get data from this file using a file reader.   </span>
+ 43                 FileReader fr = <span class="keyword-directive">new</span> FileReader(file);
+ 44                 <span class="comment">// To store the contents read via File Reader  </span>
+ 45                 BufferedReader br = <span class="keyword-directive">new</span> BufferedReader(fr);
+ 46                 <span class="comment">// Read br and store a line in &#39;data&#39;, print data  </span>
+ 47                 String data;
+ 48 
+ 49                 <span class="keyword-directive">int</span> i = 0;
+ 50                 <span class="keyword-directive">while</span> ((data = br.readLine()) != <span class="keyword-directive">null</span>) {
+ 51                     <span class="ST2">entrants</span>[i] = data;
+ 52                     i++;
+ 53                     check = <span class="keyword-directive">true</span>;
+ 54                 }
+ 55             } <span class="keyword-directive">catch</span> (IOException e) {
+ 56                 System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">No or Incorrect File Inputted</span><span class="ST4">\n</span><span class="character">&quot;</span>);
+ 57                 check = <span class="keyword-directive">false</span>;
+ 58             }
+ 59 
+ 60         }
+ 61         <span class="keyword-directive">return</span> <span class="ST2">entrants</span>;
+ 62 
+ 63     }
+ 64 
+ 65     <span class="comment">/**</span>
+ 66 <span class="comment">     * </span><span class="ST0">Method</span> <span class="ST0">for</span> <span class="ST0">getting</span> <span class="ST0">nodes</span> <span class="ST0">on</span> <span class="ST0">each</span> <span class="ST0">course</span><span class="ST0">.</span> <span class="comment">This</span> <span class="comment">will</span> <span class="comment">be</span> <span class="comment">later</span> <span class="comment">used</span> <span class="comment">for</span> <span class="comment">when</span>
+ 67 <span class="comment">     * </span><span class="comment">selecting</span> <span class="comment">the</span> <span class="comment">nodes</span> <span class="comment">the</span> <span class="comment">entrant</span> <span class="comment">has</span> <span class="comment">got</span> <span class="comment">to</span><span class="comment">.</span>
+ 68      <span class="comment">*/</span>
+ 69     <span class="keyword-directive">public</span> <span class="keyword-directive">int</span>[] <span class="ST1">get_checkpoints</span>() {
+ 70         <span class="keyword-directive">boolean</span> check = <span class="keyword-directive">false</span>;
+ 71 
+ 72         <span class="keyword-directive">while</span> (check == <span class="keyword-directive">false</span>) {
+ 73             System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="ST4">\n</span><span class="character">Please Input Nodes File Name:</span><span class="character">&quot;</span>);
+ 74             InputStreamReader converter = <span class="keyword-directive">new</span> InputStreamReader(System.<span class="ST3">in</span>);
+ 75             BufferedReader in = <span class="keyword-directive">new</span> BufferedReader(converter);
+ 76             <span class="keyword-directive">try</span> {
+ 77                 <span class="comment">// make a &#39;file&#39; object   </span>
+ 78                 File file = <span class="keyword-directive">new</span> File(in.readLine());
+ 79                 <span class="comment">//  Get data from this file using a file reader.   </span>
+ 80                 FileReader fr = <span class="keyword-directive">new</span> FileReader(file);
+ 81                 <span class="comment">// To store the contents read via File Reader  </span>
+ 82                 BufferedReader br = <span class="keyword-directive">new</span> BufferedReader(fr);
+ 83                 <span class="comment">// Read br and store a line in &#39;data&#39;, print data  </span>
+ 84                 String data;
+ 85                 <span class="keyword-directive">int</span> i = 0;
+ 86                 <span class="keyword-directive">while</span> ((data = br.readLine()) != <span class="keyword-directive">null</span>) {
+ 87                     String[] parts = data.split(<span class="character">&quot;</span> <span class="character">&quot;</span>);
+ 88                     <span class="keyword-directive">if</span> (<span class="character">&quot;</span><span class="character">CP</span><span class="character">&quot;</span>.equals(parts[1])) {
+ 89                         <span class="ST2">checkPoints</span>[i] = Integer.<span class="ST5">parseInt</span>(parts[0]);
+ 90                     }
+ 91                     i++;
+ 92                 }
+ 93                 <span class="keyword-directive">return</span> <span class="ST2">checkPoints</span>;
+ 94 
+ 95             } <span class="keyword-directive">catch</span> (IOException e) {
+ 96                 System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">No or Incorrect File Inputted</span><span class="ST4">\n</span><span class="character">&quot;</span>);
+ 97                 check = <span class="keyword-directive">false</span>;
+ 98             }
+ 99         }
+100         <span class="keyword-directive">return</span> <span class="keyword-directive">null</span>;
+101 
+102 
+103     }
+104 
+105     <span class="comment">/**</span>
+106 <span class="comment">     * </span><span class="ST0">Method</span> <span class="ST0">for</span> <span class="ST0">getting</span> <span class="ST0">nodes</span> <span class="ST0">on</span> <span class="ST0">each</span> <span class="ST0">course</span><span class="ST0">.</span> <span class="comment">This</span> <span class="comment">will</span> <span class="comment">be</span> <span class="comment">later</span> <span class="comment">used</span> <span class="comment">for</span> <span class="comment">when</span>
+107 <span class="comment">     * </span><span class="comment">selecting</span> <span class="comment">the</span> <span class="comment">nodes</span> <span class="comment">the</span> <span class="comment">entrant</span> <span class="comment">has</span> <span class="comment">got</span> <span class="comment">to</span><span class="comment">.</span>
+108      <span class="comment">*/</span>
+109     <span class="keyword-directive">public</span> String[] <span class="ST1">get_courses</span>() {
+110         <span class="keyword-directive">boolean</span> check = <span class="keyword-directive">false</span>;
+111 
+112         <span class="keyword-directive">while</span> (check == <span class="keyword-directive">false</span>) {
+113             System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="ST4">\n</span><span class="character">Please Input Courses File Name:</span><span class="character">&quot;</span>);
+114             InputStreamReader converter = <span class="keyword-directive">new</span> InputStreamReader(System.<span class="ST3">in</span>);
+115             BufferedReader in = <span class="keyword-directive">new</span> BufferedReader(converter);
+116             <span class="keyword-directive">try</span> {
+117                 <span class="comment">// make a &#39;file&#39; object   </span>
+118                 File file = <span class="keyword-directive">new</span> File(in.readLine());
+119                 <span class="comment">//  Get data from this file using a file reader.   </span>
+120                 FileReader fr = <span class="keyword-directive">new</span> FileReader(file);
+121                 <span class="comment">// To store the contents read via File Reader  </span>
+122                 BufferedReader br = <span class="keyword-directive">new</span> BufferedReader(fr);
+123                 <span class="comment">// Read br and store a line in &#39;data&#39;, print data  </span>
+124                 String data;
+125 
+126                 <span class="keyword-directive">int</span> i = 0;
+127                 <span class="keyword-directive">while</span> ((data = br.readLine()) != <span class="keyword-directive">null</span>) {
+128                     <span class="ST3">course</span>[i] = data;
+129                     i++;
+130                     check = <span class="keyword-directive">true</span>;
+131                 }
+132             } <span class="keyword-directive">catch</span> (IOException e) {
+133                 System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">No or Incorrect File Inputted</span><span class="ST4">\n</span><span class="character">&quot;</span>);
+134                 check = <span class="keyword-directive">false</span>;
+135             }
+136 
+137         }
+138         <span class="keyword-directive">return</span> <span class="ST3">course</span>;
+139 
+140     }
+141 
+142     <span class="comment">/**</span>
+143 <span class="comment">     * </span><span class="ST0">Method</span> <span class="ST0">for</span> <span class="ST0">reading</span> <span class="ST0">and</span> <span class="ST0">getting</span> <span class="ST0">current</span> <span class="ST0">entrants</span> <span class="ST0">check</span> <span class="ST0">point</span> <span class="ST0">times</span> <span class="ST0">so</span> <span class="ST0">that</span>
+144 <span class="comment">     * </span><span class="ST0">the</span> <span class="ST0">user</span> <span class="ST0">cannot</span> <span class="ST0">select</span> <span class="ST0">times</span> <span class="ST0">in</span> <span class="ST0">the</span> <span class="ST0">past</span><span class="ST0">.</span> <span class="comment">This</span> <span class="comment">file</span> <span class="comment">will</span> <span class="comment">be</span> <span class="comment">appended</span> <span class="comment">to</span>
+145 <span class="comment">     * </span><span class="comment">when</span> <span class="comment">writing</span> <span class="comment">check</span> <span class="comment">point</span> <span class="comment">times</span> <span class="comment">to</span><span class="comment">.</span>
+146 <span class="comment">     *</span>
+147 <span class="comment">     * </span><span class="ST0">@param</span> void
+148      <span class="comment">*/</span>
+149     <span class="keyword-directive">public</span> String <span class="ST1">get_current_checktimes</span>() <span class="keyword-directive">throws</span> FileNotFoundException, IOException {
+150         <span class="keyword-directive">boolean</span> check = <span class="keyword-directive">false</span>;
+151         String fileName = <span class="keyword-directive">null</span>;
+152         <span class="keyword-directive">while</span> (check != <span class="keyword-directive">true</span>) {
+153             System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="ST4">\n</span><span class="character">Please Input The Checkpoint Times File Name You Want To Update:</span><span class="character">&quot;</span>);
+154             InputStreamReader converter = <span class="keyword-directive">new</span> InputStreamReader(System.<span class="ST3">in</span>);
+155             BufferedReader in = <span class="keyword-directive">new</span> BufferedReader(converter);
+156             fileName = in.readLine();
+157             check = <span class="keyword-directive">true</span>;
+158             <span class="keyword-directive">try</span> {
+159                 File file = <span class="keyword-directive">new</span> File(fileName);
+160 
+161                 FileChannel channel = <span class="keyword-directive">new</span> RandomAccessFile(file, <span class="character">&quot;</span><span class="character">rw</span><span class="character">&quot;</span>).getChannel();
+162 
+163                 FileLock lock = <span class="keyword-directive">null</span>;
+164                 <span class="keyword-directive">try</span> {
+165                     lock = channel.tryLock();
+166                 } <span class="keyword-directive">catch</span> (OverlappingFileLockException e) {
+167                     check = <span class="keyword-directive">false</span>;
+168                     System.<span class="ST3">out</span>.println(<span class="character">&quot;</span><span class="character">The File Is Currently Locked Try Again Later</span><span class="character">&quot;</span>);
+169                 }
+170 
+171 
+172 
+173             } <span class="keyword-directive">catch</span> (Exception e) {
+174             }
+175         }
+176 
+177 
+178         <span class="keyword-directive">return</span> fileName;
+179     }
+180 }
+181 
+</pre></body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>create.h</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<style type="text/css">
+<!--
+body {color: #000000; background-color: #ffffff; font-family: Monospaced}
+pre {color: #000000; background-color: #ffffff; font-family: Monospaced}
+table {color: #000000; background-color: #e9e8e2; font-family: Monospaced}
+.ST2 {font-family: Monospaced; font-weight: bold}
+.comment {color: #969696}
+.ST0 {color: #969696; background-color: #e9eff8}
+.ST1 {color: #ce7b00; font-family: Monospaced; font-weight: bold}
+.preprocessor-system-include-literal {color: #ce7b00}
+.keyword-directive {color: #0000e6}
+.preprocessor-keyword-directive {color: #009b00}
+.pragma-omp-keyword-directive {color: #2e92c7}
+-->
+</style>
+</head>
+<body>
+<table width="100%"><tr><td align="center">C:\Users\Craig\Documents\NetBeansProjects\Event_Creation_crh13\create.h</td></tr></table>
+<pre>
+ 1 <span class="ST0">/* </span>
+ 2 <span class="comment"> * File:   create.h</span>
+ 3 <span class="comment"> * Author: Craig</span>
+ 4 <span class="comment"> *</span>
+ 5 <span class="comment"> * Created on 27 February 2013, 14:41</span>
+ 6 <span class="comment"> */</span>
+ 7 
+ 8 <span class="preprocessor-keyword-directive">#</span><span class="preprocessor-keyword-directive">define</span> <span class="pragma-omp-keyword-directive">CREATE_H</span>
+ 9 
+10 
+11 
+12 
+13 <span class="preprocessor-keyword-directive">#</span><span class="preprocessor-keyword-directive">ifdef</span>  <span class="pragma-omp-keyword-directive">__cplusplus</span>
+14 <span class="keyword-directive">extern</span> <span class="ST1">&quot;</span><span class="preprocessor-system-include-literal">C</span><span class="ST1">&quot;</span> {
+15 <span class="preprocessor-keyword-directive">#</span><span class="preprocessor-keyword-directive">endif</span>
+16 <span class="preprocessor-keyword-directive">#</span><span class="preprocessor-keyword-directive">define</span> <span class="pragma-omp-keyword-directive">SET_EVENT</span> 1
+17 <span class="preprocessor-keyword-directive">#</span><span class="preprocessor-keyword-directive">define</span> <span class="pragma-omp-keyword-directive">SET_ENTRANTS</span> 2
+18 <span class="preprocessor-keyword-directive">#</span><span class="preprocessor-keyword-directive">define</span> <span class="pragma-omp-keyword-directive">SET_COURSES</span> 3
+19 <span class="preprocessor-keyword-directive">#</span><span class="preprocessor-keyword-directive">define</span> <span class="pragma-omp-keyword-directive">QUIT</span> 4
+20 
+21 <span class="preprocessor-keyword-directive">#</span><span class="preprocessor-keyword-directive">ifndef</span> ADD_H_GUARD
+22 <span class="preprocessor-keyword-directive">#</span><span class="preprocessor-keyword-directive">define</span> <span class="pragma-omp-keyword-directive">ADD_H_GUARD</span>
+23     <span class="keyword-directive">int</span> <span class="ST2">get_event</span>();
+24     <span class="keyword-directive">int</span> <span class="ST2">get_entrants</span>();
+25     <span class="keyword-directive">int</span> <span class="ST2">get_courses</span>();
+26     <span class="keyword-directive">int</span> <span class="ST2">clearInput</span>();
+27 
+28 
+29 <span class="preprocessor-keyword-directive">#</span><span class="preprocessor-keyword-directive">ifdef</span>  <span class="pragma-omp-keyword-directive">__cplusplus</span>
+30 }
+31 <span class="preprocessor-keyword-directive">#</span><span class="preprocessor-keyword-directive">endif</span>
+32 
+33 <span class="preprocessor-keyword-directive">#</span><span class="preprocessor-keyword-directive">endif</span>  <span class="comment">/* CREATE_H */</span>
+34 
+35 
+</pre></body>
+</html>

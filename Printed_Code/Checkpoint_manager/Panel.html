@@ -1,0 +1,212 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>Panel.java</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<style type="text/css">
+<!--
+body {color: #000000; background-color: #ffffff; font-family: Monospaced}
+pre {color: #000000; background-color: #ffffff; font-family: Monospaced}
+table {color: #000000; background-color: #e9e8e2; font-family: Monospaced}
+.ST1 {font-family: Monospaced; font-weight: bold}
+.ST4 {font-family: Monospaced; font-style: italic}
+.ST0 {color: #969696; font-family: Monospaced; font-weight: bold}
+.comment {color: #969696}
+.ST3 {color: #009900; font-family: Monospaced; font-style: italic}
+.keyword-directive {color: #0000e6}
+.ST2 {color: #009900}
+.character {color: #ce7b00}
+-->
+</style>
+</head>
+<body>
+<table width="100%"><tr><td align="center">/home/craig/Desktop/Checkpoint_Manager_crh13/src/uk/ac/aber/dcs/crh13/panel/Panel.java</td></tr></table>
+<pre>
+  1 <span class="keyword-directive">package</span> uk.ac.aber.dcs.crh13.panel;
+  2 
+  3 <span class="keyword-directive">import</span> java.awt.GridLayout;
+  4 <span class="keyword-directive">import</span> java.awt.event.ActionEvent;
+  5 <span class="keyword-directive">import</span> java.awt.event.ActionListener;
+  6 <span class="keyword-directive">import</span> java.text.SimpleDateFormat;
+  7 <span class="keyword-directive">import</span> java.util.Calendar;
+  8 <span class="keyword-directive">import</span> java.util.Date;
+  9 <span class="keyword-directive">import</span> javax.swing.*;
+ 10 <span class="keyword-directive">import</span> uk.ac.aber.dcs.crh13.data.data;
+ 11 
+ 12 <span class="comment">/**</span>
+ 13 <span class="comment"> * </span><span class="ST0">Class</span> <span class="ST0">used</span> <span class="ST0">for</span> <span class="ST0">implementing</span> <span class="ST0">the</span> <span class="ST0">panel</span> <span class="ST0">of</span> <span class="ST0">the</span> <span class="ST0">user</span> <span class="ST0">interface</span><span class="ST0">.</span> <span class="comment">Has</span> <span class="comment">all</span> <span class="comment">required</span>
+ 14 <span class="comment"> * </span><span class="comment">inputs</span> <span class="comment">and</span> <span class="comment">implements</span> <span class="comment">an</span> <span class="comment">action</span> <span class="comment">listener</span> <span class="comment">to</span> <span class="comment">get</span> <span class="comment">values</span><span class="comment">.</span> <span class="comment">Sends</span> <span class="comment">these</span> <span class="comment">to</span> <span class="comment">the</span>
+ 15 <span class="comment"> * </span><span class="comment">data</span> <span class="comment">class</span> <span class="comment">that</span> <span class="comment">writes</span> <span class="comment">them</span> <span class="comment">to</span> <span class="comment">the</span> <span class="comment">checkpoint</span> <span class="comment">file</span><span class="comment">.</span>
+ 16 <span class="comment"> *</span>
+ 17 <span class="comment"> * </span><span class="ST0">@author</span> <span class="comment">Craig</span>
+ 18  <span class="comment">*/</span>
+ 19 <span class="keyword-directive">public</span> <span class="keyword-directive">class</span> <span class="ST1">Panel</span> <span class="keyword-directive">implements</span> ActionListener {
+ 20 
+ 21     <span class="keyword-directive">private</span> JButton <span class="ST2">submit</span>;
+ 22     <span class="keyword-directive">private</span> JRadioButton <span class="ST2">time</span> = <span class="keyword-directive">new</span> JRadioButton();
+ 23     <span class="keyword-directive">private</span> JRadioButton <span class="ST2">medical</span> = <span class="keyword-directive">new</span> JRadioButton();
+ 24     <span class="keyword-directive">private</span> JRadioButton <span class="ST2">departed</span> = <span class="keyword-directive">new</span> JRadioButton();
+ 25     <span class="keyword-directive">private</span> JRadioButton <span class="ST2">arrived</span> = <span class="keyword-directive">new</span> JRadioButton();
+ 26     <span class="keyword-directive">private</span> JCheckBox <span class="ST2">excluded</span> = <span class="keyword-directive">new</span> JCheckBox();
+ 27     <span class="keyword-directive">private</span> String[] <span class="ST2">coursesArray</span>;
+ 28     <span class="keyword-directive">private</span> String[] <span class="ST2">entrantArray</span>;
+ 29     <span class="keyword-directive">private</span> String <span class="ST2">fileName</span>;
+ 30     Date <span class="ST2">dateA</span> = <span class="keyword-directive">new</span> Date();
+ 31     SpinnerDateModel <span class="ST2">sm</span> = <span class="keyword-directive">new</span> SpinnerDateModel(<span class="ST2">dateA</span>, <span class="keyword-directive">null</span>, <span class="keyword-directive">null</span>, Calendar.<span class="ST3">HOUR_OF_DAY</span>);
+ 32     JSpinner <span class="ST2">timeSpinner</span> = <span class="keyword-directive">new</span> JSpinner(<span class="ST2">sm</span>);
+ 33     JComboBox <span class="ST2">entrantList</span> = <span class="keyword-directive">new</span> JComboBox();
+ 34     JComboBox <span class="ST2">checkPointList</span> = <span class="keyword-directive">new</span> JComboBox();
+ 35 
+ 36     <span class="keyword-directive">public</span> JPanel <span class="ST1">createContentPane</span>(String[] entrants, <span class="keyword-directive">int</span>[] checkPoints, String[] courses, String fN) {
+ 37         <span class="ST2">coursesArray</span> = courses;
+ 38         <span class="ST2">entrantArray</span> = entrants;
+ 39         <span class="ST2">fileName</span> = fN;
+ 40 
+ 41         <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> i = 0; i &lt; entrants.<span class="ST2">length</span>; i++) {
+ 42             <span class="keyword-directive">if</span> (entrants[i] != <span class="keyword-directive">null</span>) {
+ 43                 <span class="ST2">entrantList</span>.addItem(entrants[i]); <span class="comment">// get entrants from entrant file and dd each to combo</span>
+ 44             }
+ 45         }
+ 46 
+ 47 
+ 48         <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> a = 0; a &lt; checkPoints.<span class="ST2">length</span>; a++) {
+ 49             <span class="keyword-directive">if</span> (checkPoints[a] != 0) {
+ 50                 <span class="ST2">checkPointList</span>.addItem(checkPoints[a]);<span class="comment">// add each checkpoint to combo</span>
+ 51             }
+ 52         }
+ 53 
+ 54 
+ 55         <span class="comment">// create a bottom JPanel to place everything on.</span>
+ 56         JPanel totalGUI = <span class="keyword-directive">new</span> JPanel();
+ 57 
+ 58         <span class="comment">// set the Layout Manager to null so we can manually place</span>
+ 59         <span class="comment">// the Panels.</span>
+ 60         totalGUI.setLayout(<span class="keyword-directive">null</span>);
+ 61 
+ 62         <span class="comment">// create a new panel, size it, shape it.</span>
+ 63         <span class="comment">// then add it to the bottom JPanel.</span>
+ 64         JPanel topPanel = <span class="keyword-directive">new</span> JPanel((<span class="keyword-directive">new</span> GridLayout(3, 1)));
+ 65         topPanel.setLocation(0, 0);
+ 66         topPanel.setSize(300, 100);
+ 67 
+ 68         <span class="ST2">time</span>.setText(<span class="character">&quot;</span><span class="character">Time</span><span class="character">&quot;</span>);
+ 69         <span class="ST2">time</span>.setSelected(<span class="keyword-directive">true</span>);
+ 70         <span class="ST2">time</span>.addActionListener(<span class="keyword-directive">this</span>);
+ 71 
+ 72         <span class="ST2">medical</span>.setText(<span class="character">&quot;</span><span class="character">Medical</span><span class="character">&quot;</span>);
+ 73         <span class="ST2">medical</span>.addActionListener(<span class="keyword-directive">this</span>);
+ 74         ButtonGroup group = <span class="keyword-directive">new</span> ButtonGroup();
+ 75         group.add(<span class="ST2">time</span>);
+ 76         group.add(<span class="ST2">medical</span>);
+ 77 
+ 78         JPanel radioPanel = <span class="keyword-directive">new</span> JPanel(<span class="keyword-directive">new</span> GridLayout(1, 1));
+ 79         radioPanel.add(<span class="ST2">time</span>);
+ 80         radioPanel.add(<span class="ST2">medical</span>);
+ 81 
+ 82         JLabel checkType = <span class="keyword-directive">new</span> JLabel(<span class="character">&quot;</span><span class="character">Checpoint Type:</span><span class="character">&quot;</span>);
+ 83         JLabel nodeNum = <span class="keyword-directive">new</span> JLabel(<span class="character">&quot;</span><span class="character">Checpoint Number:</span><span class="character">&quot;</span>);
+ 84         topPanel.add(checkType);
+ 85         topPanel.add(radioPanel);
+ 86         topPanel.add(nodeNum);
+ 87         topPanel.add(<span class="ST2">checkPointList</span>);
+ 88         JLabel entrantName = <span class="keyword-directive">new</span> JLabel(<span class="character">&quot;</span><span class="character">Entrant:</span><span class="character">&quot;</span>);
+ 89         topPanel.add(entrantName);
+ 90         topPanel.add(<span class="ST2">entrantList</span>);
+ 91         totalGUI.add(topPanel);
+ 92 
+ 93         JPanel bottomPanel = <span class="keyword-directive">new</span> JPanel((<span class="keyword-directive">new</span> GridLayout(3, 1)));
+ 94         bottomPanel.setLocation(0, 100);
+ 95         bottomPanel.setSize(300, 150);
+ 96         <span class="ST2">submit</span> = <span class="keyword-directive">new</span> JButton(<span class="character">&quot;</span><span class="character">Submit</span><span class="character">&quot;</span>);
+ 97         <span class="ST2">submit</span>.addActionListener(<span class="keyword-directive">this</span>);
+ 98 
+ 99         JPanel radioPanel2 = <span class="keyword-directive">new</span> JPanel(<span class="keyword-directive">new</span> GridLayout(1, 1));
+100         <span class="ST2">arrived</span>.setText(<span class="character">&quot;</span><span class="character">Arrive-</span><span class="character">&quot;</span>);
+101         <span class="ST2">departed</span>.setText(<span class="character">&quot;</span><span class="character">Depart-</span><span class="character">&quot;</span>);
+102         ButtonGroup group2 = <span class="keyword-directive">new</span> ButtonGroup();
+103         group2.add(<span class="ST2">arrived</span>);
+104         group2.add(<span class="ST2">departed</span>);
+105         <span class="ST2">departed</span>.setEnabled(<span class="keyword-directive">false</span>);
+106         <span class="ST2">arrived</span>.setSelected(<span class="keyword-directive">true</span>);
+107         radioPanel2.add(<span class="ST2">arrived</span>);
+108         radioPanel2.add(<span class="ST2">departed</span>);
+109 
+110         JLabel travel = <span class="keyword-directive">new</span> JLabel(<span class="character">&quot;</span><span class="character">Checpoint Type:</span><span class="character">&quot;</span>);
+111         bottomPanel.add(travel);
+112         bottomPanel.add(radioPanel2);
+113         JSpinner.<span class="ST4">DateEditor</span> de = <span class="keyword-directive">new</span> JSpinner.DateEditor(<span class="ST2">timeSpinner</span>, <span class="character">&quot;</span><span class="character">a:hh:mm</span><span class="character">&quot;</span>);
+114         <span class="comment">// create the JSpinner with a specific tim format e.g PM:01:20</span>
+115         <span class="ST2">timeSpinner</span>.setEditor(de);
+116         JLabel arrTime = <span class="keyword-directive">new</span> JLabel();
+117         arrTime.setText(<span class="character">&quot;</span><span class="character">&lt;HTML&gt;Set Arrival/ Departure Time &lt;br&gt;(Defualt as current):&lt;/HTML&gt;</span><span class="character">&quot;</span>);
+118         bottomPanel.add(arrTime);
+119         <span class="ST2">excluded</span>.setText(<span class="character">&quot;</span><span class="character">Excluded?</span><span class="character">&quot;</span>);
+120         <span class="ST2">excluded</span>.setEnabled(<span class="keyword-directive">false</span>);
+121         bottomPanel.add(<span class="ST2">timeSpinner</span>);
+122         bottomPanel.add(<span class="ST2">excluded</span>);
+123         bottomPanel.add(<span class="ST2">submit</span>);
+124         totalGUI.add(bottomPanel);
+125 
+126         <span class="comment">// Finally we return the JPanel.</span>
+127         totalGUI.setOpaque(<span class="keyword-directive">true</span>);
+128         <span class="keyword-directive">return</span> totalGUI;
+129     }
+130 
+131     @Override
+132     <span class="keyword-directive">public</span> <span class="keyword-directive">void</span> <span class="ST1">actionPerformed</span>(ActionEvent evt) {
+133 
+134         String actionCommand = evt.getActionCommand();
+135 
+136         <span class="keyword-directive">switch</span> (actionCommand) {
+137             <span class="keyword-directive">case</span> <span class="character">&quot;</span><span class="character">Submit</span><span class="character">&quot;</span>:
+138                 SimpleDateFormat format = <span class="keyword-directive">new</span> SimpleDateFormat(<span class="character">&quot;</span><span class="character">HH:mm</span><span class="character">&quot;</span>);
+139                 <span class="comment">//convert the time on JSpinner to 24 hour time</span>
+140                 <span class="ST2">dateA</span> = (Date) <span class="ST2">timeSpinner</span>.getValue();
+141                 String timeString = format.format(<span class="ST2">dateA</span>);
+142                 String checkType = <span class="character">&quot;</span><span class="character">T</span><span class="character">&quot;</span>;
+143                 <span class="keyword-directive">if</span> (<span class="ST2">time</span>.isSelected()) {
+144                     checkType = <span class="character">&quot;</span><span class="character">T</span><span class="character">&quot;</span>;
+145                 } <span class="keyword-directive">else</span> { <span class="comment">// else meaning medical is selected</span>
+146                     <span class="keyword-directive">if</span> (<span class="ST2">excluded</span>.isSelected()) {
+147                         checkType = <span class="character">&quot;</span><span class="character">E</span><span class="character">&quot;</span>;
+148                     } <span class="keyword-directive">else</span> {
+149                         <span class="keyword-directive">if</span> (<span class="ST2">departed</span>.isSelected()) {
+150                             checkType = <span class="character">&quot;</span><span class="character">D</span><span class="character">&quot;</span>;
+151                         }
+152                         <span class="keyword-directive">if</span> (<span class="ST2">arrived</span>.isSelected()) {
+153                             checkType = <span class="character">&quot;</span><span class="character">A</span><span class="character">&quot;</span>;
+154                         }
+155                     }
+156                 }
+157                 data dat = <span class="keyword-directive">new</span> data();
+158                 Object selectedItem = <span class="ST2">checkPointList</span>.getSelectedItem();
+159                 String selectedItemStr = <span class="character">&quot;&quot;</span>;
+160                 <span class="keyword-directive">if</span> (selectedItem != <span class="keyword-directive">null</span>) {
+161                     selectedItemStr = selectedItem.toString();
+162                 }
+163                 <span class="keyword-directive">boolean</span> check = dat.addUpdate(checkType, <span class="ST2">entrantArray</span>[<span class="ST2">entrantList</span>.getSelectedIndex()], Integer.<span class="ST4">parseInt</span>(selectedItemStr), timeString, <span class="ST2">coursesArray</span>, <span class="ST2">fileName</span>);
+164                 <span class="keyword-directive">if</span> (check == <span class="keyword-directive">false</span>) {
+165                     JOptionPane.<span class="ST4">showMessageDialog</span>(<span class="keyword-directive">null</span>, <span class="character">&quot;</span><span class="character">Note: Competitior Was Not Expected At That Location, CheckPoint File Updated</span><span class="character">&quot;</span>, <span class="character">&quot;</span><span class="character">Checkpoint Updated</span><span class="character">&quot;</span>, JOptionPane.<span class="ST3">INFORMATION_MESSAGE</span>);
+166                 } <span class="keyword-directive">else</span> {
+167                     JOptionPane.<span class="ST4">showMessageDialog</span>(<span class="keyword-directive">null</span>, <span class="character">&quot;</span><span class="character">CheckPoint File Updated</span><span class="character">&quot;</span>, <span class="character">&quot;</span><span class="character">Checkpoint Updated</span><span class="character">&quot;</span>, JOptionPane.<span class="ST3">INFORMATION_MESSAGE</span>);
+168 
+169                 }
+170                 <span class="keyword-directive">break</span>;
+171 
+172             <span class="keyword-directive">case</span> <span class="character">&quot;</span><span class="character">Time</span><span class="character">&quot;</span>: <span class="comment">// when the time radio button is enabled, disable medical checkpoint features</span>
+173                 <span class="ST2">departed</span>.setEnabled(<span class="keyword-directive">false</span>);
+174                 <span class="ST2">arrived</span>.setSelected(<span class="keyword-directive">true</span>);
+175                 <span class="ST2">excluded</span>.setEnabled(<span class="keyword-directive">false</span>);
+176                 <span class="ST2">excluded</span>.setSelected(<span class="keyword-directive">false</span>);
+177                 <span class="keyword-directive">break</span>;
+178 
+179             <span class="keyword-directive">case</span> <span class="character">&quot;</span><span class="character">Medical</span><span class="character">&quot;</span>: <span class="comment">// enable extra features when medical radio button is selected</span>
+180                 <span class="ST2">departed</span>.setEnabled(<span class="keyword-directive">true</span>);
+181                 <span class="ST2">excluded</span>.setEnabled(<span class="keyword-directive">true</span>);
+182                 <span class="keyword-directive">break</span>;
+183         }
+184     }
+185 }
+186 
+</pre></body>
+</html>

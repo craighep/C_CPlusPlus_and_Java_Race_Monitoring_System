@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>data.java</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<style type="text/css">
+<!--
+body {color: #000000; background-color: #ffffff; font-family: Monospaced}
+pre {color: #000000; background-color: #ffffff; font-family: Monospaced}
+table {color: #000000; background-color: #e9e8e2; font-family: Monospaced}
+.ST1 {font-family: Monospaced; font-weight: bold}
+.ST4 {font-family: Monospaced; font-style: italic}
+.ST0 {color: #969696; font-family: Monospaced; font-weight: bold}
+.comment {color: #969696}
+.ST2 {color: #009900; font-family: Monospaced; font-style: italic}
+.keyword-directive {color: #0000e6}
+.ST3 {color: #009900}
+.character {color: #ce7b00}
+-->
+</style>
+</head>
+<body>
+<table width="100%"><tr><td align="center">/home/craig/Desktop/Checkpoint_Manager_crh13/src/uk/ac/aber/dcs/crh13/data/data.java</td></tr></table>
+<pre>
+ 1 <span class="keyword-directive">package</span> uk.ac.aber.dcs.crh13.data;
+ 2 
+ 3 <span class="keyword-directive">import</span> java.io.BufferedWriter;
+ 4 <span class="keyword-directive">import</span> java.io.FileWriter;
+ 5 <span class="keyword-directive">import</span> java.io.IOException;
+ 6 <span class="keyword-directive">import</span> java.io.PrintWriter;
+ 7 
+ 8 <span class="comment">/**</span>
+ 9 <span class="comment"> * </span><span class="ST0">Class</span> <span class="ST0">responsible</span> <span class="ST0">for</span> <span class="ST0">writing</span> <span class="ST0">checkpoint</span> <span class="ST0">information</span> <span class="ST0">to</span> <span class="ST0">checkpoint</span> <span class="ST0">file</span><span class="ST0">.</span> <span class="comment">Uses</span>
+10 <span class="comment"> * </span><span class="comment">information</span> <span class="comment">sent</span> <span class="comment">from</span> <span class="comment">GUI</span> <span class="comment">and</span> <span class="comment">filename</span> <span class="comment">from</span> <span class="comment">FileIO</span> <span class="comment">class</span> <span class="comment">to</span> <span class="comment">check</span> <span class="comment">if</span> <span class="comment">an</span>
+11 <span class="comment"> * </span><span class="comment">entrant</span> <span class="comment">was</span> <span class="comment">expected</span> <span class="comment">at</span> <span class="comment">a</span> <span class="comment">checkpoint</span> <span class="comment">and</span> <span class="comment">then</span> <span class="comment">write</span> <span class="comment">to</span> <span class="comment">file</span> <span class="comment">accordingly</span><span class="comment">.</span>
+12 <span class="comment"> *</span>
+13 <span class="comment"> * </span><span class="ST0">@author</span> <span class="comment">craig</span>
+14  <span class="comment">*/</span>
+15 <span class="keyword-directive">public</span> <span class="keyword-directive">class</span> <span class="ST1">data</span> {
+16 
+17     <span class="comment">/**</span>
+18 <span class="comment">     * </span><span class="ST0">Method</span> <span class="ST0">for</span> <span class="ST0">writing</span> <span class="ST0">checkpoint</span> <span class="ST0">update</span> <span class="ST0">to</span> <span class="ST0">file</span><span class="ST0">, </span><span class="ST0">and</span> <span class="ST0">calling</span> <span class="ST0">the</span>
+19 <span class="comment">     * </span><span class="ST0">checkExpected</span> <span class="ST0">method</span> <span class="ST0">in</span> <span class="ST0">order</span> <span class="ST0">to</span> <span class="ST0">check</span> <span class="ST0">if</span> <span class="ST0">an</span> <span class="ST0">entrant</span> <span class="ST0">went</span> <span class="ST0">to</span> <span class="ST0">an</span>
+20 <span class="comment">     * </span><span class="ST0">appropriate</span> <span class="ST0">checkpoint</span><span class="ST0">.</span>
+21      <span class="comment">*/</span>
+22     <span class="keyword-directive">public</span> <span class="keyword-directive">boolean</span> <span class="ST1">addUpdate</span>(String cpType, String entrant, <span class="keyword-directive">int</span> node, String time, String[] courses, String fileName) {
+23 
+24         String EntrantCourse[] = entrant.split(<span class="character">&quot;</span> <span class="character">&quot;</span>); <span class="comment">//  split up the entrant string to get specific parts</span>
+25         <span class="keyword-directive">boolean</span> check = checkExpected(courses, EntrantCourse[1], node);
+26         <span class="keyword-directive">if</span> (check == <span class="keyword-directive">false</span>) { <span class="comment">// check if the entrant was not expected at the checkpoint</span>
+27             cpType = <span class="character">&quot;</span><span class="character">I</span><span class="character">&quot;</span>;
+28         }
+29         <span class="keyword-directive">try</span> {
+30             <span class="keyword-directive">try</span> (PrintWriter out = <span class="keyword-directive">new</span> PrintWriter(<span class="keyword-directive">new</span> BufferedWriter(<span class="keyword-directive">new</span> FileWriter(fileName, <span class="keyword-directive">true</span>)))) {
+31                 out.println(cpType + <span class="character">&quot;</span> <span class="character">&quot;</span> + node + <span class="character">&quot;</span> <span class="character">&quot;</span> + EntrantCourse[0] + <span class="character">&quot;</span> <span class="character">&quot;</span> + time);
+32             }
+33         } <span class="keyword-directive">catch</span> (IOException e) {
+34             System.<span class="ST2">out</span>.println(<span class="character">&quot;</span><span class="character">Could Not write</span><span class="character">&quot;</span>);
+35         }
+36         <span class="keyword-directive">if</span> (check == <span class="keyword-directive">false</span>) {
+37             <span class="keyword-directive">return</span> <span class="keyword-directive">false</span>; <span class="comment">// return to paneel to inform that the entrant went to an inappropriate checkpoint for alert</span>
+38         }
+39         <span class="keyword-directive">return</span> <span class="keyword-directive">true</span>;
+40     }
+41 
+42     <span class="comment">/**</span>
+43 <span class="comment">     * </span><span class="ST0">Method</span> <span class="ST0">for</span> <span class="ST0">checking</span> <span class="ST0">if</span> <span class="ST0">the</span> <span class="ST0">entrants</span> <span class="ST0">checkpoint</span> <span class="ST0">is</span> <span class="ST0">registered</span> <span class="ST0">on</span> <span class="ST0">their</span>
+44 <span class="comment">     * </span><span class="ST0">course</span><span class="ST0">.</span> <span class="comment">Returns</span> <span class="comment">true</span> <span class="comment">if</span> <span class="comment">the</span> <span class="comment">checkpoint</span> <span class="comment">exists</span> <span class="comment">on</span> <span class="comment">the</span> <span class="comment">entrants</span> <span class="comment">course</span><span class="comment">,</span>
+45 <span class="comment">     * </span><span class="comment">false</span> <span class="comment">if</span> <span class="comment">not</span><span class="comment">.</span> <span class="comment">Does</span> <span class="comment">this</span> <span class="comment">by</span> <span class="comment">looping</span> <span class="comment">through</span> <span class="comment">the</span> <span class="comment">entrants</span> <span class="comment">designated</span>
+46 <span class="comment">     * </span><span class="comment">course</span><span class="comment">, </span><span class="comment">then</span> <span class="comment">checks</span> <span class="comment">for</span> <span class="comment">a</span> <span class="comment">match</span><span class="comment">.</span>
+47      <span class="comment">*/</span>
+48     <span class="keyword-directive">public</span> <span class="keyword-directive">boolean</span> <span class="ST1">checkExpected</span>(String[] courses, String EntrantCourse, <span class="keyword-directive">int</span> node) {
+49         <span class="keyword-directive">boolean</span> check = <span class="keyword-directive">false</span>;
+50         <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> i = 0; i &lt; courses.<span class="ST3">length</span>; i++) {
+51             <span class="keyword-directive">if</span> (courses[i] != <span class="keyword-directive">null</span>) {
+52                 String[] parts = courses[i].split(<span class="character">&quot;</span> <span class="character">&quot;</span>);
+53                 <span class="keyword-directive">if</span> (EntrantCourse.equals(parts[0])) { <span class="comment">// get course entrant is registered for</span>
+54                     <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> a = 1; a &lt; parts.<span class="ST3">length</span>; a++) {
+55 
+56                         <span class="keyword-directive">if</span> (Integer.<span class="ST4">parseInt</span>(parts[a]) == node) { <span class="comment">// check every checkpoint on the course</span>
+57                             check = <span class="keyword-directive">true</span>;
+58                         }
+59 
+60                     }
+61                 }
+62             }
+63         }
+64         <span class="keyword-directive">return</span> check;
+65 
+66     }
+67 }
+</pre></body>
+</html>

@@ -1,0 +1,10 @@
+Exception: STATUS_STACK_OVERFLOW at eip=00410723
+eax=15EDBF60 ebx=00000000 ecx=00032920 edx=0022A98C esi=61275E28 edi=611A1EDF
+ebp=0022AC38 esp=0022A918 program=C:\Users\Craig\Documents\NetBeansProjects\Event_Creation_crh13\dist\Debug\Cygwin-Windows\event_creation_crh13.exe, pid 1516, thread main
+cs=001B ds=0023 es=0023 fs=003B gs=0000 ss=0023
+Stack trace:
+Frame     Function  Args
+0022AC38  00410723  (00446440, 0022AC64, 20010100, 004011B5)
+0022AC68  004012CD  (00000001, 0022AC90, 20010100, 61275F62)
+0022ACF8  61007535  (00000000, 0022CD78, 61006B20, 00000000)
+End of stack trace

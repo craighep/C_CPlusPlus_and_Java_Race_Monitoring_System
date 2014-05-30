@@ -1,0 +1,255 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>main.cpp</title>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<style type="text/css">
+<!--
+body {color: #000000; background-color: #ffffff; font-family: Monospaced}
+pre {color: #000000; background-color: #ffffff; font-family: Monospaced}
+table {color: #000000; background-color: #e9e8e2; font-family: Monospaced}
+.ST2 {font-family: Monospaced; font-weight: bold}
+.comment {color: #969696}
+.ST0 {color: #969696; background-color: #e9eff8}
+.ST4 {color: #ce7b00; background-color: #eceba3; font-family: Monospaced; font-weight: bold}
+.ST3 {color: #ce7b00; font-family: Monospaced; font-weight: bold}
+.ST1 {color: #009900}
+.ST5 {color: #ce7b00; background-color: #eceba3}
+.preprocessor-system-include-literal {color: #ce7b00}
+.keyword-directive {color: #0000e6}
+.preprocessor-keyword-directive {color: #009b00}
+.pragma-omp-keyword-directive {color: #2e92c7}
+-->
+</style>
+</head>
+<body>
+<table width="100%"><tr><td align="center">C:\Users\Craig\Documents\NetBeansProjects\Event_Creation_crh13\main.cpp</td></tr></table>
+<pre>
+  1 <span class="ST0">/* </span>
+  2 <span class="comment"> * File:   main.cpp</span>
+  3 <span class="comment"> * Author: Craig</span>
+  4 <span class="comment"> *</span>
+  5 <span class="comment"> * Program intended for creating basic data files for an event. This includes</span>
+  6 <span class="comment"> * methods for creating an event (name, date and time), creating a set of </span>
+  7 <span class="comment"> * entrants for that event, and creating a list of nodes on the courses.</span>
+  8 <span class="comment"> * Created on 27 February 2013, 08:27</span>
+  9 <span class="comment"> */</span>
+ 10 
+ 11 <span class="preprocessor-keyword-directive">#</span><span class="preprocessor-keyword-directive">include</span> <span class="preprocessor-system-include-literal">&lt;iostream&gt;</span>
+ 12 <span class="preprocessor-keyword-directive">#</span><span class="preprocessor-keyword-directive">include</span> <span class="preprocessor-system-include-literal">&lt;fstream&gt;</span>
+ 13 <span class="preprocessor-keyword-directive">#</span><span class="preprocessor-keyword-directive">include</span> <span class="preprocessor-system-include-literal">&lt;algorithm&gt;</span>
+ 14 <span class="preprocessor-keyword-directive">#</span><span class="preprocessor-keyword-directive">include</span> <span class="preprocessor-system-include-literal">&lt;limits&gt;</span>
+ 15 <span class="preprocessor-keyword-directive">#</span><span class="preprocessor-keyword-directive">include</span> <span class="preprocessor-system-include-literal">&quot;create.h&quot;</span>
+ 16 <span class="keyword-directive">using</span> <span class="keyword-directive">namespace</span> std;
+ 17 
+ 18 <span class="comment">/*</span>
+ 19 <span class="comment"> * Create a structure for each event, entrant and courses in order to</span>
+ 20 <span class="comment"> * encapsulate infromation</span>
+ 21 <span class="comment"> */</span>
+ 22 <span class="keyword-directive">struct</span> event {
+ 23     <span class="pragma-omp-keyword-directive">string</span> <span class="ST1">name</span>;
+ 24     <span class="pragma-omp-keyword-directive">string</span> <span class="ST1">date</span>;
+ 25     <span class="pragma-omp-keyword-directive">string</span> <span class="ST1">time</span>;
+ 26 };
+ 27 
+ 28 <span class="keyword-directive">struct</span> entrant {
+ 29     <span class="pragma-omp-keyword-directive">string</span> <span class="ST1">name</span>;
+ 30     <span class="keyword-directive">int</span> <span class="ST1">ID</span>;
+ 31     <span class="pragma-omp-keyword-directive">string</span> <span class="ST1">course</span>;
+ 32 };
+ 33 
+ 34 <span class="keyword-directive">struct</span> course {
+ 35     <span class="pragma-omp-keyword-directive">string</span> <span class="ST1">course</span>;
+ 36     <span class="keyword-directive">int</span> <span class="ST1">node</span>[20];
+ 37     <span class="keyword-directive">int</span> <span class="ST1">nodes</span>;
+ 38 };
+ 39 
+ 40 <span class="comment">/*</span>
+ 41 <span class="comment"> * Main method containing main menu of the program offering options to the user.</span>
+ 42 <span class="comment"> * user can select an operation e.g. creating an event, then when complete </span>
+ 43 <span class="comment"> * return to the menu for next selection.</span>
+ 44 <span class="comment"> */</span>
+ 45 <span class="keyword-directive">int</span> <span class="ST2">main</span>(<span class="keyword-directive">int</span> argc, <span class="keyword-directive">char</span>** argv) {
+ 46     <span class="keyword-directive">int</span> what_next; <span class="comment">/* holds the users selection*/</span>
+ 47     <span class="keyword-directive">do</span> {
+ 48         printf(<span class="ST3">&quot;</span><span class="preprocessor-system-include-literal">       ******************************************************</span><span class="ST3">\n</span><span class="ST3">&quot;</span>);
+ 49         printf(<span class="ST3">&quot;</span><span class="preprocessor-system-include-literal">       *                                                    *</span><span class="ST3">\n</span><span class="ST3">&quot;</span>);
+ 50         printf(<span class="ST3">&quot;</span><span class="preprocessor-system-include-literal">       *             Please Select An Option:               *</span><span class="ST3">\n</span><span class="ST3">&quot;</span>);
+ 51         printf(<span class="ST3">&quot;</span><span class="preprocessor-system-include-literal">       *----------------------------------------------------*</span><span class="ST3">\n</span><span class="ST3">&quot;</span>);
+ 52         printf(<span class="ST3">&quot;</span><span class="preprocessor-system-include-literal">       * %2d.Enter An Event                                  *</span><span class="ST3">\n</span><span class="ST3">&quot;</span>, <span class="pragma-omp-keyword-directive">SET_EVENT</span>);
+ 53         printf(<span class="ST3">&quot;</span><span class="preprocessor-system-include-literal">       * %2d.Enter The Entrants For Event                    *</span><span class="ST3">\n</span><span class="ST3">&quot;</span>, <span class="pragma-omp-keyword-directive">SET_ENTRANTS</span>);
+ 54         printf(<span class="ST3">&quot;</span><span class="preprocessor-system-include-literal">       * %2d.Enter Courses Nodes For Event                   *</span><span class="ST3">\n</span><span class="ST3">&quot;</span>, <span class="pragma-omp-keyword-directive">SET_COURSES</span>);
+ 55         printf(<span class="ST3">&quot;</span><span class="preprocessor-system-include-literal">       *----------------------------------------------------*</span><span class="ST3">\n</span><span class="ST3">&quot;</span>);
+ 56         printf(<span class="ST3">&quot;</span><span class="preprocessor-system-include-literal">       * %2d.Quit                                            *</span><span class="ST3">\n</span><span class="ST3">&quot;</span>, <span class="pragma-omp-keyword-directive">QUIT</span>);
+ 57         printf(<span class="ST3">&quot;</span><span class="preprocessor-system-include-literal">       ******************************************************</span><span class="ST3">\n</span><span class="ST3">&quot;</span>);
+ 58         cin &gt;&gt; what_next;
+ 59         <span class="comment">/*print out the options, using the header file options*/</span>
+ 60 
+ 61         <span class="comment">/* based on the user&#39;s choice, do what they want */</span>
+ 62 
+ 63         <span class="keyword-directive">switch</span> (what_next) {
+ 64             <span class="keyword-directive">case</span> <span class="pragma-omp-keyword-directive">SET_EVENT</span>:
+ 65                 get_event();
+ 66                 cout &lt;&lt; <span class="ST3">&quot;</span><span class="ST3">\n</span><span class="ST3">\n</span><span class="ST3">\n</span><span class="ST3">\n</span><span class="ST3">\n</span><span class="ST3">\n</span><span class="ST3">\n</span><span class="ST3">\n</span><span class="ST3">&quot;</span>; <span class="comment">/* clear screen after function */</span>
+ 67                 <span class="keyword-directive">break</span>;
+ 68             <span class="keyword-directive">case</span> <span class="pragma-omp-keyword-directive">SET_ENTRANTS</span>:
+ 69                 get_entrants();
+ 70                 cout &lt;&lt; <span class="ST3">&quot;</span><span class="ST3">\n</span><span class="ST3">\n</span><span class="ST3">\n</span><span class="ST3">\n</span><span class="ST3">\n</span><span class="ST3">\n</span><span class="ST3">\n</span><span class="ST3">\n</span><span class="ST3">&quot;</span>;
+ 71                 <span class="keyword-directive">break</span>;
+ 72             <span class="keyword-directive">case</span> <span class="pragma-omp-keyword-directive">SET_COURSES</span>:
+ 73                 clearInput();
+ 74                 get_courses();
+ 75                 cout &lt;&lt; <span class="ST3">&quot;</span><span class="ST3">\n</span><span class="ST3">\n</span><span class="ST3">\n</span><span class="ST3">\n</span><span class="ST3">\n</span><span class="ST3">\n</span><span class="ST3">\n</span><span class="ST3">\n</span><span class="ST3">&quot;</span>;
+ 76                 <span class="keyword-directive">break</span>;
+ 77             <span class="keyword-directive">case</span> <span class="pragma-omp-keyword-directive">QUIT</span>:
+ 78                 <span class="keyword-directive">break</span>;
+ 79             <span class="keyword-directive">default</span>:
+ 80                 cout &lt;&lt; <span class="ST3">&quot;</span><span class="preprocessor-system-include-literal">Incorrect Input</span><span class="ST3">\n</span><span class="ST3">\n</span><span class="ST3">&quot;</span>;
+ 81                 <span class="keyword-directive">break</span>;
+ 82         }
+ 83     } <span class="keyword-directive">while</span> (what_next != <span class="pragma-omp-keyword-directive">QUIT</span>);
+ 84 
+ 85     <span class="keyword-directive">return</span> 0;
+ 86 }
+ 87 
+ 88 <span class="comment">/*</span>
+ 89 <span class="comment"> *Method for getting the event to be created by inputs from users. Uses </span>
+ 90 <span class="comment"> * cin getline function to get the whole line inputted as a string, then simply </span>
+ 91 <span class="comment"> * adds this to the event structure where it is then outputted to file.</span>
+ 92 <span class="comment"> */</span>
+ 93 <span class="keyword-directive">int</span> <span class="ST2">get_event</span>() {
+ 94 
+ 95     event event; <span class="comment">// create a new event structure</span>
+ 96     clearInput(); <span class="comment">// clear input when input previously uses cin</span>
+ 97     cout &lt;&lt; <span class="ST3">&quot;</span><span class="preprocessor-system-include-literal">Please Input Event Name: </span><span class="ST3">&quot;</span>;
+ 98     getline(cin, event.<span class="ST1">name</span>); <span class="comment">// get event name and store within the event structure</span>
+ 99     cout &lt;&lt; <span class="ST3">&quot;</span><span class="preprocessor-system-include-literal">Please Input Event Date(e.g 25th June 2012): </span><span class="ST3">&quot;</span>;
+100     getline(cin, event.<span class="ST1">date</span>);
+101     cout &lt;&lt; <span class="ST3">&quot;</span><span class="preprocessor-system-include-literal">Please Input Event Time(e.g 09:10): </span><span class="ST3">&quot;</span>;
+102     getline(cin, event.<span class="ST1">time</span>);
+103 
+104     <span class="pragma-omp-keyword-directive">ofstream</span> myfile;
+105     myfile.open(<span class="ST3">&quot;</span><span class="preprocessor-system-include-literal">name.txt</span><span class="ST3">&quot;</span>); <span class="comment">// open a file named &quot;name.txt&quot; or create it if it does not exist</span>
+106     myfile &lt;&lt; event.<span class="ST1">name</span> + <span class="ST3">&quot;</span><span class="ST3">\n</span><span class="ST3">&quot;</span>; <span class="comment">// output event name followed by new line character</span>
+107     myfile &lt;&lt; event.<span class="ST1">date</span> + <span class="ST3">&quot;</span><span class="ST3">\n</span><span class="ST3">&quot;</span>;
+108     myfile &lt;&lt; event.<span class="ST1">time</span>;
+109     myfile.close(); <span class="comment">// close file once everything is written</span>
+110 
+111 }
+112 
+113 <span class="comment">/*</span>
+114 <span class="comment"> *Methods used to get entrants for an event. Does this by creating an array of</span>
+115 <span class="comment"> * entrants of type entrant depending on how many entrants the user says there is.</span>
+116 <span class="comment"> * Then runs through this array printing each to the entrants file.</span>
+117 <span class="comment"> */</span>
+118 <span class="keyword-directive">int</span> <span class="ST2">get_entrants</span>() {
+119     <span class="keyword-directive">int</span> entrants = 1;
+120     <span class="keyword-directive">int</span> id = 1;
+121 
+122     cout &lt;&lt; <span class="ST3">&quot;</span><span class="preprocessor-system-include-literal">How Many Entrants Are There?: </span><span class="ST3">&quot;</span>;
+123     cin &gt;&gt; entrants; <span class="comment">// get number of entrants in event</span>
+124     clearInput();
+125 
+126     <span class="keyword-directive">if</span> (entrants &gt; 0) {
+127         entrant entrant_array[entrants]; <span class="comment">// create array of entrants type entrant</span>
+128 
+129         <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> i = 0; i &lt; entrants; i++) { <span class="comment">// for each entrant in the array</span>
+130             cout &lt;&lt; <span class="ST3">&quot;</span><span class="preprocessor-system-include-literal">Please Enter Entrants Full Name: </span><span class="ST3">&quot;</span>;
+131             getline(cin, entrant_array[i].<span class="ST1">name</span>); <span class="comment">//get the entrants name and add to structure</span>
+132             cout &lt;&lt; <span class="ST3">&quot;</span><span class="preprocessor-system-include-literal">Please Enter Entrants Course: </span><span class="ST3">&quot;</span>;
+133             getline(cin, entrant_array[i].<span class="ST1">course</span>);
+134         }
+135         <span class="pragma-omp-keyword-directive">ofstream</span> myfile;
+136         myfile.open(<span class="ST3">&quot;</span><span class="preprocessor-system-include-literal">entrants.txt</span><span class="ST3">&quot;</span>); <span class="comment">// open the entrants text file</span>
+137         <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> a = 0; a &lt; entrants; a++) { <span class="comment">// for each entrant, write entrant details</span>
+138             myfile &lt;&lt; id;
+139             myfile &lt;&lt; <span class="ST3">&quot;</span> <span class="ST3">&quot;</span> + entrant_array[a].<span class="ST1">course</span> + <span class="ST3">&quot;</span> <span class="ST3">&quot;</span>;
+140             myfile &lt;&lt; entrant_array[a].<span class="ST1">name</span> + <span class="ST3">&quot;</span><span class="ST3">\n</span><span class="ST3">&quot;</span>;
+141             id++;
+142         }
+143         myfile.close();
+144     }
+145 }
+146 
+147 <span class="comment">/*</span>
+148 <span class="comment"> *Method for allowing user input of courses, outlining their nodes for each one.</span>
+149 <span class="comment"> * Checks if nodes exists, ensuring a course does not have an invalid course </span>
+150 <span class="comment"> * node.</span>
+151 <span class="comment"> */</span>
+152 <span class="keyword-directive">int</span> <span class="ST2">get_courses</span>() {
+153     <span class="keyword-directive">int</span> courses;
+154 
+155     <span class="pragma-omp-keyword-directive">string</span> fileName;
+156     cout &lt;&lt; <span class="ST3">&quot;</span><span class="preprocessor-system-include-literal">Input Filename For Nodes: </span><span class="ST3">&quot;</span>;
+157     getline(cin, fileName); <span class="comment">// get the node filename</span>
+158 
+159     <span class="pragma-omp-keyword-directive">ifstream</span> inData;
+160     inData.open(fileName.c_str()); <span class="comment">// check if the nodes file is not empty</span>
+161     <span class="keyword-directive">if</span> (!inData)
+162         <span class="keyword-directive">return</span> 0;
+163 
+164     <span class="keyword-directive">int</span> size = 0;
+165     <span class="pragma-omp-keyword-directive">string</span> line;
+166     <span class="keyword-directive">while</span> (!inData.eof()) <span class="comment">// get the size of the nodes file, depicting the amount of nodes.</span>
+167     {
+168         getline(inData, line);
+169         size++;
+170     }
+171     size--; <span class="comment">// remove one from size, as program will have read an extra line</span>
+172 
+173 
+174     cout &lt;&lt; <span class="ST3">&quot;</span><span class="preprocessor-system-include-literal">How Many Courses Do You Want To Input?: </span><span class="ST3">&quot;</span>;
+175     cin &gt;&gt; courses; <span class="comment">// get amount of courses to be written</span>
+176     course course_array[courses]; <span class="comment">// create an array of courses, of type course</span>
+177 
+178     <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> i = 0; i &lt; courses; i++) { <span class="comment">//for each course</span>
+179         cout &lt;&lt; <span class="ST3">&quot;</span><span class="preprocessor-system-include-literal">Enter Course Letter: </span><span class="ST3">&quot;</span>;
+180         cin &gt;&gt; course_array[i].<span class="ST1">course</span>; <span class="comment">//get the course letter</span>
+181         clearInput();
+182         cout &lt;&lt; <span class="ST3">&quot;</span><span class="preprocessor-system-include-literal">How Many Nodes Are On This Course?: </span><span class="ST3">&quot;</span>; <span class="comment">//find out how many nodes are to be input</span>
+183         cin &gt;&gt; course_array[i].<span class="ST1">nodes</span>;
+184         clearInput();
+185 
+186         <span class="keyword-directive">int</span> identify = 1;
+187         <span class="keyword-directive">bool</span> check = <span class="keyword-directive">true</span>;
+188         <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> a = 0; a &lt; course_array[i].<span class="ST1">nodes</span>; a++) {
+189             <span class="keyword-directive">do</span> {
+190                 check = <span class="keyword-directive">false</span>;
+191                 cout &lt;&lt; <span class="ST3">&quot;</span><span class="preprocessor-system-include-literal">Input Node: </span><span class="ST3">&quot;</span> &lt;&lt; identify &lt;&lt; <span class="ST3">&quot;</span><span class="preprocessor-system-include-literal">:</span><span class="ST3">&quot;</span>; <span class="comment">// ask for specific node on course</span>
+192 
+193                 cin &gt;&gt; course_array[i].<span class="ST1">node</span>[a]; <span class="comment">// get node from user input</span>
+194                 <span class="keyword-directive">if</span> (course_array[i].<span class="ST1">node</span>[a] &gt; size) { <span class="comment">// check if node exists</span>
+195                     cout &lt;&lt; <span class="ST3">&quot;</span><span class="preprocessor-system-include-literal">Node Does Not Exist. Try Again.</span><span class="ST3">&quot;</span>;
+196                     check = <span class="keyword-directive">true</span>;
+197                 }
+198             } <span class="keyword-directive">while</span> (check == <span class="keyword-directive">true</span>);
+199             identify++;
+200         }
+201     }
+202 
+203     <span class="pragma-omp-keyword-directive">ofstream</span> myfile;
+204     myfile.open(<span class="ST4">&quot;</span><span class="ST5">courses.txt</span><span class="ST4">&quot;</span>); <span class="comment">// open courses file to be written to</span>
+205     <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> a = 0; a &lt; courses; a++) {
+206         myfile &lt;&lt; course_array[a].<span class="ST1">course</span>; <span class="comment">// write course letter to each line</span>
+207         myfile &lt;&lt; <span class="ST3">&quot;</span> <span class="ST3">&quot;</span> &lt;&lt; course_array[a].<span class="ST1">nodes</span>;
+208         <span class="keyword-directive">for</span> (<span class="keyword-directive">int</span> b = 0; b &lt; course_array[a].<span class="ST1">nodes</span>; b++) {
+209             myfile &lt;&lt; <span class="ST3">&quot;</span> <span class="ST3">&quot;</span> &lt;&lt; course_array[a].<span class="ST1">node</span>[b]; <span class="comment">// write out each course node</span>
+210         }
+211         myfile &lt;&lt; <span class="ST3">&quot;</span><span class="ST3">\n</span><span class="ST3">&quot;</span>; <span class="comment">// end each line with new line character</span>
+212     }
+213     myfile.close(); <span class="comment">// close file after writing</span>
+214 }
+215 
+216 <span class="comment">/*</span>
+217 <span class="comment"> *This short method simply clears the input buffer and is used before a </span>
+218 <span class="comment"> * readline input after a cin input. It removes the newline character gained</span>
+219 <span class="comment"> * from a previous cin.</span>
+220 <span class="comment"> */</span>
+221 <span class="keyword-directive">int</span> <span class="ST2">clearInput</span>() {
+222 
+223     std::cin.ignore(std::numeric_limits&lt;std::<span class="pragma-omp-keyword-directive">streamsize</span>&gt;::max(), <span class="preprocessor-system-include-literal">&#39;</span><span class="ST3">\n</span><span class="preprocessor-system-include-literal">&#39;</span>);
+224 
+225 }
+226 
+</pre></body>
+</html>
